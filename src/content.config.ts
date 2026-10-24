@@ -6,28 +6,26 @@ const posts = defineCollection({
   // src/content/posts 以下の .mdx を全部集める
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/posts" }),
   schema: z.object({
-    category: reference("categories"),
-    number: z.number().int().min(0),
     title: z.string(),
     description: z.string(),
+    category: reference("categories"),
+    number: z.number().int().min(1),
     date: z.coerce.date(),
     draft: z.boolean().default(false),
   }),
 });
 
 const fields = defineCollection({
-  loader: file("src/data/fields.yaml"),
+  loader: file("src/data/fields.yml"),
   schema: z.object({
-    id: z.string(),
     name: z.string(),
   }),
 });
 
 const categories = defineCollection({
-  loader: file("src/data/categories.yaml"),
+  loader: file("src/data/categories.yml"),
   schema: z.object({
-    id: z.string(),
-    field: reference("field"),
+    field: reference("fields"),
     level: z.number().int().min(0),
     title: z.string(),
     description: z.string()
