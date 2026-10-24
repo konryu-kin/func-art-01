@@ -34,4 +34,4 @@ const categories = defineCollection({
   }),
 });
 
-export const collections = { posts };
+export const collections = { posts, fields, categories };
