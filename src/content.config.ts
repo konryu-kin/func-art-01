@@ -19,7 +19,7 @@ const fields = defineCollection({
   loader: file("src/data/fields.yaml"),
   schema: z.object({
     id: z.string(),
-    number: z.number().int().min(0),
+    name: z.string(),
   }),
 });
 
