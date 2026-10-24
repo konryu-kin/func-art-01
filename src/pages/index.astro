@@ -5,20 +5,14 @@ import { getPublishedPosts, getPostUrl } from "../lib/posts";
 const title = "関数アート技術の01";
 
 const posts = await getPublishedPosts();
-const postsWithUrls = await Promise.all(
-	posts.map(async (post) => ({
-		post,
-		url: await getPostUrl(post),
-	})),
-);
 ---
 
 <BaseLayout title={title}>
 	<h1>{title}</h1>
 	<ul>
-		{postsWithUrls.map(({ post, url }) => 
+		{posts.map((post) => 
 		<li>
-			<a href={url}>
+			<a href={getPostUrl(post)}>
 				<p>{post.data.title}</p>
 				<p>{post.data.description}</p>
 			</a>

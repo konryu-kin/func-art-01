@@ -21,7 +21,8 @@ const { Content } = await render(post);
 
 <BaseLayout title={post.data.title}>
   <article>
-    <h1>{`(${category.data.field.id},${category.data.level}) ${String.fromCodePoint(0x2460 + post.data.number - 1)}`}{post.data.title}</h1>
+    <p>{`(${category.data.field.id},${category.data.level}) ${category.data.title} ${String.fromCodePoint(0x2460 + post.data.number - 1)}`}</p>
+    <h1>{post.data.title}</h1>
     <Content />
   </article>
 </BaseLayout>

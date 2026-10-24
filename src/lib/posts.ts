@@ -7,30 +7,25 @@ export async function getPublishedPosts() {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
   const categories = await getCollection("categories");
   const idCategoryMap = new Map(categories.map((c) => [c.id, c]));
-  const sorting = (a: Post, b: Post) => {
-    const categoryAB = [a, b].map((x) =>
-      idCategoryMap.get(x.data.category.id),
-    ) as (typeof categories)[number][];
-    if (!categoryAB[0] || !categoryAB[1]) return 0;
-    const fieldsAB = categoryAB.map((c) => Number(c?.data.field.id));
-    if (fieldsAB[0] !== fieldsAB[1]) {
-      return fieldsAB[0] - fieldsAB[1];
-    }
-    const levelAB = categoryAB.map((c) => c?.data.level);
-    if (levelAB[0] !== levelAB[1]) {
-      return levelAB[0] - levelAB[1];
-    }
-    const numberAB = [a, b].map((x) => x.data.number);
-    return numberAB[0] - numberAB[1];
+  const getCategory = (post: Post) => {
+    const category = idCategoryMap.get(post.data.category.id);
+    if (!category)
+      throw new Error(`カテゴリーが見つかりません: ${post.data.category.id}`);
+    return category;
   };
-  posts.sort(sorting);
+  posts.sort((a, b) => {
+    const ca = getCategory(a);
+    const cb = getCategory(b);
+    return (
+      Number(ca.data.field.id) - Number(cb.data.field.id) ||
+      ca.data.level - cb.data.level ||
+      a.data.number - b.data.number
+    );
+  });
   return posts;
 }
 
 //postに対応する記事のURLを取得する
-export async function getPostUrl(post: Post) {
-  const categories = await getCollection("categories");
-  const category = categories.filter((c) => c.id === post.data.category.id)[0]
-    .data;
-  return `posts/${category.field.id}-${category.level}/${post.data.number}/`;
+export function getPostUrl(post: Post) {
+  return `/posts/${post.data.category.id}/${post.data.number}/`;
 }
